@@ -17,19 +17,46 @@ namespace Sort {
 
     template<typename T>
     void sort(T begin, T end) {
-        for (T repeat = end - 1; repeat >= begin; repeat--) {
-            for (T element = begin; element < repeat; element++) {
-                if (*element > *(element + 1)) {
-                    change(element, element+1);
+        T repeat = end;
+        do{
+            --repeat;
+            for (T element = begin; element != repeat; element++) {
+                T next = element;
+                ++next;
+                if (*element > *(next)) {
+                    std::iter_swap(element,next);
                 }
             }
-        }
+        }while (repeat != begin) ;
     }
 
     template<typename Container>
     void sort(Container &cont) {
         Sort::sort(cont.begin(), cont.end());
     }
+
+    //QSort Algorithm
+    template<typename It>
+    void quickSort(It begin, It end){
+        auto before = end;
+        auto pivot = --before;
+
+        auto pos = begin, p = begin;
+        for(;pos != before; pos++){
+            if(*pos < *pivot){
+                std::swap(*pos, *p);
+                p++;
+            }
+        }
+
+        std::swap(*p, *pivot);
+        if(p!=begin) quickSort(begin, p);
+        if(p!=before) quickSort(++p, end);
+    }
+
+
+
+
 
 //defines comparison operator
     struct Greater {

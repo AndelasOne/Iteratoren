@@ -14,9 +14,12 @@ namespace Container{
     template<typename T>
     std::vector<T> random_container_test(size_t n) {
         std::vector<T> new_vector;
+        std::random_device dv;
+        std::default_random_engine randomEngine(dv());
         for (size_t element = 0; element < n; element++) {
+            std::uniform_real_distribution<double> distribution(0, 50);
+            T random_numb = distribution(randomEngine);
 
-            T random_numb = rand();
             new_vector.push_back(random_numb);
         }
         return new_vector;
@@ -29,7 +32,8 @@ namespace Container{
 
     template<typename T, template <typename, typename> class Cont>
     Cont <T, std::allocator<T>> random_container(size_t n) {
-        Cont<T, std::allocator<T>> new_container;
+        using INT_CONT = Cont<T, std::allocator<T>>;
+        INT_CONT new_container ;
         for (size_t element = 0; element < n; element++) {
             int random_numb = rand();
             //only works with vectors
@@ -38,18 +42,33 @@ namespace Container{
         return new_container;
     }
 
-    template<typename T, template <typename> class Cont>
-    Cont <T> random_container_3(size_t n) {
-        Cont<T> new_container;
-        for (size_t element = 0; element < n; element++) {
-            int random_numb = rand();
-            new_container[element] = random_numb;
-        }
-        return new_container;
+
+
+
+
+    template <typename INT_CONT, size_t N>
+    INT_CONT create_container()
+    {
+        return INT_CONT();
+    }
+
+    template <>
+    std::array<int, 5> create_container<std::array<int,5>,5>()
+    {
+        return std::array<int, 5>();
     }
 
 
-
+    template <template<typename,typename> class Cont>
+    Cont<int,std::allocator<int>> random_container_simple(size_t n)
+    {
+        Cont<int,std::allocator<int>> res(n);
+        for (size_t i = 0; i < n; ++i)
+        {
+            res[i] = rand();
+        }
+        return res;
+    }
 
 
 
